@@ -1,16 +1,17 @@
 pipeline {
     agent any
-    stages{
-        stage('pull"){
+    stages {
+        stage('pull'){
             steps {
                 git branch: 'dev', url: 'https://github.com/Shubham-Patil-Hydra/combine-project-frontend.git'
             }
         }
         stage('build'){
-            steps{
+            steps {
                 sh '''
                     npm install
                     ng build
+                '''
             }
         }
         stage('deploy'){
