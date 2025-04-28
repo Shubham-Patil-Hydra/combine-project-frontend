@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+    stages {
+        stage('Pull Code') {
+            steps {
+                git branch: 'dev', url: 'https://github.com/Shubham-Patil-Hydra/combine-project-frontend.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh '''
+                    npm install
+                    ng build
+                '''
+            }
+        }
+        stage('Deploy') {
+            steps {
+                withCredentials([aws(
+                    credentialsId: 'aws-cred',
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                )]) {
+                    sh '''
+                        aws s3 cp --recursive dist/angular-frontend/ s3://hydra0998/
+                    '''
+                }
+            }
+        }
+    }
+}
